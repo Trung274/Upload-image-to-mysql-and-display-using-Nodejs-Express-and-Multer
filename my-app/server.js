@@ -6,7 +6,7 @@ const multer = require('multer')
 const path = require('path')
 
 
-//use express static folder
+// use express static folder
 app.use(express.static("C:/Users/admin/PARZIVAL/xampp/htdocs/Upload-image-to-mysql-and-display-using-Nodejs-Express-and-Multer/my-app"))
 
 // body-parser middleware use
@@ -46,47 +46,79 @@ var upload = multer({
 
 //! Routes start
 
-// route to fetch the latest uploaded image source
-app.get('/getImage', (req, res) => {
-    const getLastImageQuery = "SELECT file_src FROM users_file ORDER BY id DESC LIMIT 1";
+// route to fetch the latest uploaded avatar image source
+app.get('/getAvatar', (req, res) => {
+    const getLastAvatarQuery = "SELECT file_src FROM users_file WHERE file_type = 'avatar' ORDER BY id DESC LIMIT 1";
 
-    db.query(getLastImageQuery, (err, result) => {
+    db.query(getLastAvatarQuery, (err, result) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ error: 'Internal Server Error' });
         }
 
         if (result.length > 0) {
-            const imageSrc = result[0].file_src;
-            res.json({ imageSrc });
+            const avatarSrc = result[0].file_src;
+            res.json({ avatarSrc });
         } else {
-            res.json({ imageSrc: '' }); // No image found
+            res.json({ avatarSrc: '' }); // No avatar found
         }
     });
 });
 
-//route for Home page
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+// route to fetch the latest uploaded cover photo image source
+app.get('/getCoverPhoto', (req, res) => {
+    const getLastCoverPhotoQuery = "SELECT file_src FROM users_file WHERE file_type = 'cover_photo' ORDER BY id DESC LIMIT 1";
+
+    db.query(getLastCoverPhotoQuery, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        if (result.length > 0) {
+            const coverPhotoSrc = result[0].file_src;
+            res.json({ coverPhotoSrc });
+        } else {
+            res.json({ coverPhotoSrc: '' }); // No cover photo found
+        }
+    });
 });
 
-//@type   POST
-//route for post data
-app.post("/post", upload.single('image'), (req, res) => {
+// route for post avatar data
+app.post("/uploadAvatar", upload.single('avatar'), (req, res) => {
     if (!req.file) {
-        console.log("No file upload");
+        console.log("No avatar file upload");
     } else {
         console.log(req.file.filename)
-        var imgsrc = 'http://127.0.0.1:3000/images/' + req.file.filename
-        var insertData = `INSERT INTO users_file(file_src) VALUES ("${imgsrc}")`
-        db.query(insertData, [imgsrc], (err, result) => {
+        var avatarSrc = 'http://127.0.0.1:3000/images/' + req.file.filename
+        var insertData = `INSERT INTO users_file(file_src, file_type) VALUES ("${avatarSrc}", 'avatar')`
+        db.query(insertData, [avatarSrc], (err, result) => {
             if (err) throw err
-            console.log("file uploaded")
+            console.log("Avatar file uploaded")
         })
     }
 });
 
-//create connection
+// route for post cover photo data
+app.post("/uploadCoverPhoto", upload.single('coverPhoto'), (req, res) => {
+    if (!req.file) {
+        console.log("No cover photo file upload");
+    } else {
+        console.log(req.file.filename)
+        var coverPhotoSrc = 'http://127.0.0.1:3000/images/' + req.file.filename
+        var insertData = `INSERT INTO users_file(file_src, file_type) VALUES ("${coverPhotoSrc}", 'cover_photo')`
+        db.query(insertData, [coverPhotoSrc], (err, result) => {
+            if (err) throw err
+            console.log("Cover photo file uploaded")
+        })
+    }
+});
+
+// route for Home page
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+});
+
+// create connection
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => console.log(`Server is running at port ${PORT}`))
-
