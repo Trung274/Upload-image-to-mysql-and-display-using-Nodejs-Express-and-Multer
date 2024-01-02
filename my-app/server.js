@@ -7,7 +7,7 @@ const path = require('path')
 
 
 //use express static folder
-app.use(express.static("/Users/admin/my-app"))
+app.use(express.static("C:/Users/admin/PARZIVAL/xampp/htdocs/Upload-image-to-mysql-and-display-using-Nodejs-Express-and-Multer/my-app"))
 
 // body-parser middleware use
 app.use(bodyparser.json())
@@ -33,7 +33,7 @@ db.connect(function (err) {
 //! Use of Multer
 var storage = multer.diskStorage({
     destination: (req, file, callBack) => {
-        callBack(null, '/Users/admin/my-app/images')     // directory name where save the file
+        callBack(null, 'C:/Users/admin/PARZIVAL/xampp/htdocs/Upload-image-to-mysql-and-display-using-Nodejs-Express-and-Multer/my-app/images')     // directory name where save the file
     },
     filename: (req, file, callBack) => {
         callBack(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
@@ -45,6 +45,25 @@ var upload = multer({
 });
 
 //! Routes start
+
+// route to fetch the latest uploaded image source
+app.get('/getImage', (req, res) => {
+    const getLastImageQuery = "SELECT file_src FROM users_file ORDER BY id DESC LIMIT 1";
+
+    db.query(getLastImageQuery, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        if (result.length > 0) {
+            const imageSrc = result[0].file_src;
+            res.json({ imageSrc });
+        } else {
+            res.json({ imageSrc: '' }); // No image found
+        }
+    });
+});
 
 //route for Home page
 app.get('/', (req, res) => {

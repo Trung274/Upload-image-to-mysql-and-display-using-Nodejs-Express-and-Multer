@@ -1,15 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-      <title>How to store image path in MySQL database using Node js</title>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-      <h1>How to store image path in MySQL database using Node js/h1>
-      <form action="/post" enctype="multipart/form-data" method="post">
+<head>
+    <title>How to store image path in MySQL database using Node js</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        #imageContainer {
+            width: 300px; /* Adjust the width and height as needed */
+            height: 300px;
+            background-size: cover;
+            background-position: center;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>How to store image path in MySQL database using Node js</h1>
+    <form action="/post" enctype="multipart/form-data" method="post">
         <input type="file" name="image" accept='image/*' >
         <input type="submit" value="Upload">
-      </form>  
-    </body>
+    </form>
+    <div>
+        <h2>Uploaded Image</h2>
+        <div id="imageContainer"></div>
+    </div>
+    <script>
+        // Fetch the image source from the server and set it as the background of the container
+        fetch('/getImage')
+            .then(response => response.json())
+            .then(data => {
+                const imageSrc = data.imageSrc;
+                document.getElementById('imageContainer').style.backgroundImage = `url(${imageSrc})`;
+            });
+    </script>
+</body>
 </html>
