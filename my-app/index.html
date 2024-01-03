@@ -44,8 +44,8 @@
     </div>
 
     <script>
-        // Fetch the avatar image source from the server and set it as the background of the container
-        fetch('/getAvatar')
+         // Fetch the avatar image source from the server and set it as the background of the container
+         fetch('/getAvatar')
             .then(response => response.json())
             .then(data => {
                 const avatarSrc = data.avatarSrc;
@@ -58,7 +58,7 @@
             .then(data => {
                 const coverPhotoSrc = data.coverPhotoSrc;
                 document.getElementById('coverPhotoContainer').style.backgroundImage = `url(${coverPhotoSrc})`;
-            });
+            }); 
     </script>
 </body>
 </html>

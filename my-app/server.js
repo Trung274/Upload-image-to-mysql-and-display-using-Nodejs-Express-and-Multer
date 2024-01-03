@@ -32,12 +32,12 @@ db.connect(function (err) {
 //! Use of Multer
 var storage = multer.diskStorage({
     destination: (req, file, callBack) => {
-        callBack(null, 'C:/Users/admin/PARZIVAL/xampp/htdocs/Upload-image-to-mysql-and-display-using-Nodejs-Express-and-Multer/my-app/images')     // directory name where save the file
+        callBack(null, 'C:/Users/admin/PARZIVAL/xampp/htdocs/Upload-image-to-mysql-and-display-using-Nodejs-Express-and-Multer/my-app/images'); // directory name where save the file
     },
     filename: (req, file, callBack) => {
-        callBack(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+        callBack(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
-})
+});
 
 var upload = multer({
     storage: storage
@@ -47,7 +47,7 @@ var upload = multer({
 
 // route to fetch the latest uploaded avatar image source
 app.get('/getAvatar', (req, res) => {
-    const getLastAvatarQuery = "SELECT file_src FROM users_file WHERE file_type = 'avatar' ORDER BY id DESC LIMIT 1";
+    const getLastAvatarQuery = "SELECT avatar FROM user ORDER BY id DESC LIMIT 1";
 
     db.query(getLastAvatarQuery, (err, result) => {
         if (err) {
@@ -56,7 +56,7 @@ app.get('/getAvatar', (req, res) => {
         }
 
         if (result.length > 0) {
-            const avatarSrc = result[0].file_src;
+            const avatarSrc = result[0].avatar;
             res.json({ avatarSrc });
         } else {
             res.json({ avatarSrc: '' }); // No avatar found
@@ -66,7 +66,7 @@ app.get('/getAvatar', (req, res) => {
 
 // route to fetch the latest uploaded cover photo image source
 app.get('/getCoverPhoto', (req, res) => {
-    const getLastCoverPhotoQuery = "SELECT file_src FROM users_file WHERE file_type = 'cover_photo' ORDER BY id DESC LIMIT 1";
+    const getLastCoverPhotoQuery = "SELECT avatar FROM user ORDER BY id DESC LIMIT 1";
 
     db.query(getLastCoverPhotoQuery, (err, result) => {
         if (err) {
@@ -75,7 +75,7 @@ app.get('/getCoverPhoto', (req, res) => {
         }
 
         if (result.length > 0) {
-            const coverPhotoSrc = result[0].file_src;
+            const coverPhotoSrc = result[0].avatar; // Update to use the correct field name
             res.json({ coverPhotoSrc });
         } else {
             res.json({ coverPhotoSrc: '' }); // No cover photo found
@@ -90,11 +90,11 @@ app.post("/uploadAvatar", upload.single('avatar'), (req, res) => {
     } else {
         console.log(req.file.filename)
         var avatarSrc = 'http://127.0.0.1:3000/images/' + req.file.filename
-        var insertData = `INSERT INTO users_file(file_src, file_type) VALUES ("${avatarSrc}", 'avatar')`
-        db.query(insertData, [avatarSrc], (err, result) => {
-            if (err) throw err
-            console.log("Avatar file uploaded")
-        })
+        var insertData = `INSERT INTO user(avatar) VALUES ("${avatarSrc}")`;
+        db.query(insertData, (err, result) => {
+            if (err) throw err;
+            console.log("Avatar file uploaded");
+        });
     }
 });
 
@@ -105,11 +105,11 @@ app.post("/uploadCoverPhoto", upload.single('coverPhoto'), (req, res) => {
     } else {
         console.log(req.file.filename)
         var coverPhotoSrc = 'http://127.0.0.1:3000/images/' + req.file.filename
-        var insertData = `INSERT INTO users_file(file_src, file_type) VALUES ("${coverPhotoSrc}", 'cover_photo')`
-        db.query(insertData, [coverPhotoSrc], (err, result) => {
-            if (err) throw err
-            console.log("Cover photo file uploaded")
-        })
+        var insertData = `INSERT INTO user(avatar) VALUES ("${coverPhotoSrc}")`;
+        db.query(insertData, (err, result) => {
+            if (err) throw err;
+            console.log("Cover photo file uploaded");
+        });
     }
 });
 
