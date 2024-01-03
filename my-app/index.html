@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>How to store image path in MySQL database using Node js</title>
+    <title>How to store image path in MySQL database using Node.js</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -17,16 +17,16 @@
     </style>
 </head>
 <body>
-    <h1>How to store image path in MySQL database using Node js</h1>
-    
+    <h1>How to store image path in MySQL database using Node.js</h1>
+
     <!-- Avatar Upload Form -->
-    <form action="/uploadAvatar" enctype="multipart/form-data" method="post">
+    <form id="avatarForm" enctype="multipart/form-data">
         <input type="file" name="avatar" accept='image/*' >
         <input type="submit" value="Upload Avatar">
     </form>
-    
+
     <!-- Cover Photo Upload Form -->
-    <form action="/uploadCoverPhoto" enctype="multipart/form-data" method="post">
+    <form id="coverPhotoForm" enctype="multipart/form-data">
         <input type="file" name="coverPhoto" accept='image/*' >
         <input type="submit" value="Upload Cover Photo">
     </form>
@@ -44,21 +44,71 @@
     </div>
 
     <script>
-        // Fetch the avatar image source from the server and set it as the background of the container
-        fetch('/getAvatar')
-            .then(response => response.json())
-            .then(data => {
-                const avatarSrc = data.avatarSrc;
-                document.getElementById('avatarContainer').style.backgroundImage = `url(${avatarSrc})`;
-            });
+        // Function to fetch and display avatar image
+        function fetchAndDisplayAvatar() {
+            fetch('/getAvatar')
+                .then(response => response.json())
+                .then(data => {
+                    const avatarSrc = data.avatarSrc;
+                    document.getElementById('avatarContainer').style.backgroundImage = `url(${avatarSrc})`;
+                });
+        }
 
-        // Fetch the cover photo image source from the server and set it as the background of the container
-        fetch('/getCoverPhoto')
+        // Function to fetch and display cover photo image
+        function fetchAndDisplayCoverPhoto() {
+            fetch('/getCoverPhoto')
+                .then(response => response.json())
+                .then(data => {
+                    const coverPhotoSrc = data.coverPhotoSrc;
+                    document.getElementById('coverPhotoContainer').style.backgroundImage = `url(${coverPhotoSrc})`;
+                });
+        }
+
+        // Event listener for avatar upload form submission
+        document.querySelector('#avatarForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Use FormData to handle the file upload
+            const formData = new FormData(this);
+
+            // Send a POST request to upload the avatar
+            fetch('/uploadAvatar', {
+                method: 'POST',
+                body: formData,
+            })
             .then(response => response.json())
             .then(data => {
-                const coverPhotoSrc = data.coverPhotoSrc;
-                document.getElementById('coverPhotoContainer').style.backgroundImage = `url(${coverPhotoSrc})`;
+                if (data.success) {
+                    // If upload is successful, fetch and display the avatar
+                    fetchAndDisplayAvatar();
+                }
             });
+        });
+
+        // Event listener for cover photo upload form submission
+        document.querySelector('#coverPhotoForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Use FormData to handle the file upload
+            const formData = new FormData(this);
+
+            // Send a POST request to upload the cover photo
+            fetch('/uploadCoverPhoto', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // If upload is successful, fetch and display the cover photo
+                    fetchAndDisplayCoverPhoto();
+                }
+            });
+        });
+
+        // Initial fetch and display of avatar and cover photo
+        fetchAndDisplayAvatar();
+        fetchAndDisplayCoverPhoto();
     </script>
 </body>
 </html>
