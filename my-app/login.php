@@ -32,7 +32,7 @@ if (isset($_POST['btn-login'])) {
         echo '<script>alert("Login successful")</script>';
 
         // Redirect to the main page after successful login
-        echo '<script>window.location.href = "home.html";</script>';
+        echo '<script>window.location.href = "user-profile.html";</script>';
         exit();
     } else {
         // Failed login, display error message and redirect to regis_login.html
