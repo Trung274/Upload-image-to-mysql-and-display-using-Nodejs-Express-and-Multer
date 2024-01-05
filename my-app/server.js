@@ -19,7 +19,7 @@ const db = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "",
-    database: "test"
+    database: "music_server"
 })
 
 db.connect(function (err) {
@@ -118,7 +118,7 @@ app.post("/uploadCoverPhoto", upload.single('coverPhoto'), (req, res) => {
 
 // route for Home page
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/user-profile.html');
 });
 
 // create connection

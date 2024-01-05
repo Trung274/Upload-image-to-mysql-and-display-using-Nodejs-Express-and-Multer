@@ -123,9 +123,9 @@
         <div class="page-body-profile m-0 row">
             <div class="left-profile col-1"></div>
             <div class="feed-profile col-10">
-                <div class="profile-frame">
+                <div class="profile-frame" id="coverPhotoContainer">
                     <!-- Display user's avatar -->
-                    <img class="avt-icon" src="assets/icons/Ava-profile.svg" alt="">
+                    <img id="avatarContainer" class="avt-icon" src="assets/icons/Ava-profile.svg" alt="">
                 </div>
                 <div class="share-frame-btn m-0 row">
 
@@ -182,7 +182,7 @@
         </div>
     </div>
 
-<!-- scrip to upload-modal -->
+<!-- Script to upload-modal -->
 <script>
     var modal = document.querySelector('.modal-upload');
     function openmodal() {
@@ -191,6 +191,25 @@
     function closemodal() {
         modal.setAttribute('class','modal-upload close-modal')
     }
+</script>
+
+<!-- Script to fetch and display image-->
+<script>
+    // Fetch the avatar image source from the server and set it as the background of the container
+    fetch('/getAvatar')
+       .then(response => response.json())
+       .then(data => {
+           const avatarSrc = data.avatarSrc;
+           document.getElementById('avatarContainer').style.backgroundImage = `url(${avatarSrc})`;
+       });
+
+   // Fetch the cover photo image source from the server and set it as the background of the container
+   fetch('/getCoverPhoto')
+       .then(response => response.json())
+       .then(data => {
+           const coverPhotoSrc = data.coverPhotoSrc;
+           document.getElementById('coverPhotoContainer').style.backgroundImage = `url(${coverPhotoSrc})`;
+       }); 
 </script>
 
 </body>
