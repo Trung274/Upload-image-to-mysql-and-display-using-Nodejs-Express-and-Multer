@@ -6,7 +6,7 @@ const multer = require('multer')
 const path = require('path')
 
 // use express static folder
-app.use(express.static("C:/Users/admin/PARZIVAL/XAMPP/htdocs/Upload-image-to-mysql-and-display-using-Nodejs-Express-and-Multer/my-app"))
+app.use(express.static(path.join(__dirname, 'my-app')));
 
 // body-parser middleware use
 app.use(bodyparser.json())

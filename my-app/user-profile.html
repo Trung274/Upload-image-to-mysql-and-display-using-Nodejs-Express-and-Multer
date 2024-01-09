@@ -101,23 +101,33 @@
 
         <!--Modal Overlay-->
         <div class="modal-upload close-modal">
-            <form class="modal-upload-block" action="upload.php" enctype="multipart/form-data" method="post">
+            <!-- Form for uploading avatar -->
+            <form class="modal-upload-block" action="/uploadAvatar" enctype="multipart/form-data" method="post">
+                <input type="hidden" name="userId" value="USER_ID_GOES_HERE"> <!-- Replace USER_ID_GOES_HERE with the actual user ID -->
                 <div class="upload-header text-center my-3">
                     <p>CUSTOMIZE YOUR PROFILE!</p>
                     <img class="close-btn" onclick="closemodal()" src="assets/icons/close.svg" alt="">
                 </div>
                 <div class="upload-body">
-                    <form action="/uploadAvatar" enctype="multipart/form-data" method="post">
-                        <input type="file" name="avatar" accept='image/*' >
-                        <input type="submit" value="Upload Avatar">
-                    </form>
-                    <form action="/uploadCoverPhoto" enctype="multipart/form-data" method="post">
-                        <input type="file" name="coverPhoto" accept='image/*' >
-                        <input type="submit" value="Upload Cover Photo">
-                    </form>
+                    <input type="file" name="avatar" accept='image/*'>
+                    <input type="submit" value="Upload Avatar">
+                </div>
+            </form>
+        
+            <!-- Form for uploading cover photo -->
+            <form class="modal-upload-block" action="/uploadCoverPhoto" enctype="multipart/form-data" method="post">
+                <input type="hidden" name="userId" value="USER_ID_GOES_HERE"> <!-- Replace USER_ID_GOES_HERE with the actual user ID -->
+                <div class="upload-header text-center my-3">
+                    <p>CUSTOMIZE YOUR PROFILE!</p>
+                    <img class="close-btn" onclick="closemodal()" src="assets/icons/close.svg" alt="">
+                </div>
+                <div class="upload-body">
+                    <input type="file" name="coverPhoto" accept='image/*'>
+                    <input type="submit" value="Upload Cover Photo">
                 </div>
             </form>
         </div>
+        
 
         <!-- bodybar -->
         <div class="page-body-profile m-0 row">
