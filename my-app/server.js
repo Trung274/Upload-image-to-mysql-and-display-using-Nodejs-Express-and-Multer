@@ -6,7 +6,7 @@ const multer = require('multer')
 const path = require('path')
 
 // use express static folder
-app.use(express.static(path.join(__dirname, 'my-app')));
+app.use(express.static("assets"))
 
 // body-parser middleware use
 app.use(bodyparser.json())
@@ -32,7 +32,7 @@ db.connect(function (err) {
 //! Use of Multer
 var storage = multer.diskStorage({
     destination: (req, file, callBack) => {
-        callBack(null, 'C:/Users/admin/PARZIVAL/XAMPP/htdocs/Upload-image-to-mysql-and-display-using-Nodejs-Express-and-Multer/my-app/images'); // directory name where save the file
+        callBack(null, 'assets/images'); // directory name where save the file
     },
     filename: (req, file, callBack) => {
         callBack(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
