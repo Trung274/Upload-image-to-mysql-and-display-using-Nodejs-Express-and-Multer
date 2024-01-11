@@ -28,11 +28,14 @@ if (isset($_POST['btn-login'])) {
         $_SESSION['username'] = $user_data['username'];
         // Additional user information can be saved in session if needed
 
+        // Generate a token with the username
+        $token = base64_encode(json_encode(['username' => $user_data['username']]));
+
         // Display alert for successful login
         echo '<script>alert("Login successful")</script>';
 
-        // Redirect to the main page after successful login
-        echo '<script>window.location.href = "user-profile.html";</script>';
+        // Redirect to the Node.js profile page with the token
+        echo '<script>window.location.href = "http://localhost:3000/profile/' . $user_data['username'] . '?token=' . $token . '";</script>';
         exit();
     } else {
         // Failed login, display error message and redirect to regis_login.html
