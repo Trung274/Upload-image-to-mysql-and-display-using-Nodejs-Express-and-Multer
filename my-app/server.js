@@ -7,7 +7,7 @@ const multer = require('multer');
 const path = require('path');
 
 // use express static folder
-app.use(express.static("assets"));
+app.use(express.static(path.join(__dirname, "assets")));
 
 // body-parser middleware use
 app.use(bodyparser.json());
@@ -88,34 +88,70 @@ app.get('/getCoverPhoto', (req, res) => {
 app.post("/uploadAvatar", upload.single('avatar'), (req, res) => {
     if (!req.file) {
         console.log("No avatar file upload");
-    } else {
-        console.log(req.file.filename);
-        var avatarSrc = 'http://127.0.0.1:3000/images/' + req.file.filename
-        var insertData = `INSERT INTO user(avatar) VALUES ("${avatarSrc}")`;
-        db.query(insertData, (err, result) => {
-            if (err) throw err;
-            console.log("Avatar file uploaded");
-        });
+        return res.status(400).json({ error: 'No avatar file uploaded' });
     }
+
+    const userId = req.body.userId; // Assuming you pass the user ID along with the request
+
+    if (!userId) {
+        console.log("No user ID provided");
+        return res.status(400).json({ error: 'No user ID provided' });
+    }
+
+    console.log(req.file.filename);
+    const avatarSrc = 'http://127.0.0.1:3000/images/' + req.file.filename;
+
+    // Insert the user and avatar information into the user table
+    const insertData = `INSERT INTO user(id, avatar) VALUES ("${userId}", "${avatarSrc}")`;
+
+    db.query(insertData, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error', details: err.message });
+        }
+
+        console.log("Avatar file uploaded");
+        res.json({ success: true });
+    });
 });
 
 // route for post cover photo data
 app.post("/uploadCoverPhoto", upload.single('coverPhoto'), (req, res) => {
     if (!req.file) {
         console.log("No cover photo file upload");
-    } else {
-        console.log(req.file.filename);
-        var coverPhotoSrc = 'http://127.0.0.1:3000/images/' + req.file.filename;
-
-        // Update the SQL query to include the cover photo information
-        var insertData = `INSERT INTO user(avatar, cover_photo) VALUES ("${coverPhotoSrc}", "${coverPhotoSrc}")`;
-
-        db.query(insertData, (err, result) => {
-            if (err) throw err;
-            console.log("Cover photo file uploaded");
-        });
+        return res.status(400).json({ error: 'No cover photo file uploaded' });
     }
+
+    const userId = req.body.userId; // Assuming you pass the user ID along with the request
+
+    if (!userId) {
+        console.log("No user ID provided");
+        return res.status(400).json({ error: 'No user ID provided' });
+    }
+
+    console.log(req.file.filename);
+    const coverPhotoSrc = 'http://127.0.0.1:3000/images/' + req.file.filename;
+
+    // Insert only the cover photo information into the user table
+    const insertData = `INSERT INTO user(id, cover_photo) VALUES ("${userId}", "${coverPhotoSrc}")`;
+
+    db.query(insertData, (err, result) => {
+        if (err) {
+            console.error(err);
+
+            // Check if the error is due to a duplicate entry on the 'username' column
+            if (err.code === 'ER_DUP_ENTRY' && err.sqlMessage.includes('username')) {
+                return res.status(500).json({ error: 'Internal Server Error', details: 'Duplicate entry for username' });
+            }
+
+            return res.status(500).json({ error: 'Internal Server Error', details: err.message });
+        }
+
+        console.log("Cover photo file uploaded");
+        res.json({ success: true });
+    });
 });
+
 
 // route for user profile
 app.get('/profile/:username', (req, res) => {
