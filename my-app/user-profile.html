@@ -100,33 +100,37 @@
         <script src="musicbar.js"></script>
 
         <!--Modal Overlay-->
-        <div class="modal-upload close-modal">
-            <!-- Form for uploading avatar -->
-            <form class="modal-upload-block" action="/uploadAvatar" enctype="multipart/form-data" method="post">
-                <input type="hidden" name="userId" value="USER_ID_GOES_HERE"> <!-- Replace USER_ID_GOES_HERE with the actual user ID -->
-                <div class="upload-header text-center my-3">
-                    <p>CUSTOMIZE YOUR PROFILE!</p>
-                    <img class="close-btn" onclick="closemodal()" src="assets/icons/close.svg" alt="">
-                </div>
-                <div class="upload-body">
-                    <input type="file" name="avatar" accept='image/*'>
-                    <input type="submit" value="Upload Avatar">
-                </div>
-            </form>
-        
-            <!-- Form for uploading cover photo -->
-            <form class="modal-upload-block" action="/uploadCoverPhoto" enctype="multipart/form-data" method="post">
-                <input type="hidden" name="userId" value="USER_ID_GOES_HERE"> <!-- Replace USER_ID_GOES_HERE with the actual user ID -->
-                <div class="upload-header text-center my-3">
-                    <p>CUSTOMIZE YOUR PROFILE!</p>
-                    <img class="close-btn" onclick="closemodal()" src="assets/icons/close.svg" alt="">
-                </div>
-                <div class="upload-body">
-                    <input type="file" name="coverPhoto" accept='image/*'>
-                    <input type="submit" value="Upload Cover Photo">
-                </div>
-            </form>
+<div class="modal-upload close-modal">
+    <div class="modal-upload-block">
+        <div class="upload-header text-center my-3">
+            <p>CUSTOMIZE YOUR PROFILE!</p>
+            <img class="close-btn" onclick="closemodal()" src="assets/icons/close.svg" alt="">
         </div>
+        <div class="upload-body">
+            <!-- Avatar Upload Form -->
+<form action="/uploadAvatar" enctype="multipart/form-data" method="post">
+    <!-- Add an input field for user ID -->
+    <input type="hidden" name="userId" value="<?php echo getUserId(); ?>">
+
+    <div><label for="avatar">Avatar:</label>
+        <input type="file" name="avatar" id="avatar" accept='image/*'>
+    </div>
+    <input class="upload-file-btn" type="submit" value="Upload Avatar">
+</form>
+
+            <!-- Cover Photo Upload Form -->
+<form action="/uploadCoverPhoto" enctype="multipart/form-data" method="post">
+    <!-- Add an input field for user ID -->
+    <input type="hidden" name="userId" value="<?php echo getUserId(); ?>">
+
+    <div><label for="coverPhoto">Background:</label>
+        <input type="file" name="coverPhoto" id="coverPhoto" accept='image/*'>
+    </div>
+    <input class="upload-file-btn" type="submit" value="Upload Cover Photo">
+</form>
+        </div>
+    </div>
+</div>
         
 
         <!-- bodybar -->

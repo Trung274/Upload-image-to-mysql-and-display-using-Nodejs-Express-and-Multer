@@ -31,10 +31,8 @@ if (isset($_POST['btn-login'])) {
         // Generate a token with the username
         $token = base64_encode(json_encode(['username' => $user_data['username']]));
 
-        // Display alert for successful login
-        echo '<script>alert("Login successful")</script>';
-
         // Redirect to the Node.js profile page with the token
+        echo '<script>alert("Login successful")</script>';
         echo '<script>window.location.href = "http://localhost:3000/profile/' . $user_data['username'] . '?token=' . $token . '";</script>';
         exit();
     } else {
@@ -43,5 +41,10 @@ if (isset($_POST['btn-login'])) {
         echo '<script>window.location.href = "regis_login.html";</script>';
         exit();
     }
+}
+
+// Function to get the user ID from the session
+function getUserId() {
+    return isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 }
 ?>
